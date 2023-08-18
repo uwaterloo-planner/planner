@@ -1,1 +1,2 @@
-export const loadingAuthStatus = 'loading'
+export const loadingStatus = 'loading'
+export const authenticatedStatus = 'authenticated'

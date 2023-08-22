@@ -8,7 +8,7 @@ interface AutoCompleteProps {
 }
 
 const AutoComplete: React.FC<AutoCompleteProps> = ({ courseArray, setCourseArray }) => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string | null>(null)
 
     return (
         <Autocomplete 

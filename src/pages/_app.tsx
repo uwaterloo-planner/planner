@@ -4,6 +4,9 @@ import { SessionProvider, useSession } from "next-auth/react"
 import { loadingStatus } from "@/constants"
 import LoadingState from "@/components/loading"
 import { Container } from "@mui/material"
+import Header from "@/components/header"
+import 'tailwindcss/tailwind.css'
+import Footer from "@/components/footer"
 
 export default function App({
     Component,
@@ -12,7 +15,9 @@ export default function App({
     return (
         <SessionProvider session={session}>
             <Auth>
+                <Header />
                 <Component {...pageProps} />
+                <Footer />
             </Auth>
         </SessionProvider>
     )

@@ -1,5 +1,6 @@
 import AutoComplete from "@/components/autocomplete"
-import { availableCoursesMap } from "@/constants"
+import axios from 'axios'
+import { PLAN_ENDPOINT, availableCoursesMap } from "@/constants"
 import { Button, Container, Typography } from "@mui/material"
 import React, { useState } from "react"
 
@@ -12,19 +13,17 @@ const Plan: React.FC = () => {
         const mappedCourseIds = courseArray.map((course) => availableCoursesMap[course])
         const courseQuery = mappedCourseIds.join(',')
 
-        const endpoint = `/api/plan?course=${courseQuery}`
-     
-        const options = {
-            method: 'GET',
-            // param: {
-            //     course: courseQuery
-            // }
+        try {
+            const response = await axios.get(PLAN_ENDPOINT, {
+                params: {
+                    course: courseQuery
+                }
+            })
+            const result = await response.data
+            console.log(result)
+        } catch (e) {
+            console.error(e)
         }
-        console.log(options)
-        const response = await fetch(endpoint, options)
-        
-        const result = await response.json()
-        console.log(result)
     }
     return (
         <Container>
@@ -35,7 +34,7 @@ const Plan: React.FC = () => {
                 <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
                 <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
                 <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <Button type='submit' variant="outlined">Submit</Button>
+                <Button disabled={courseArray.length === 0} type='submit' variant="outlined">Submit</Button>
             </form>
         </Container>
     )

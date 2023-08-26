@@ -1,4 +1,4 @@
-const sampleData = [
+export const sampleData = [
     [
         {
             "courseId": "004382",

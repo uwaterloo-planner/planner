@@ -12,7 +12,7 @@ export const availableCoursesMap: { [key: string]: string } = {
     'CS 251': '004382',
     'CS 341': '004392',
     'CS 346': '016287',
-    'CS 350': '11416',
+    'CS 350': '011416',
     'CS 370': '004400' 
 }
 

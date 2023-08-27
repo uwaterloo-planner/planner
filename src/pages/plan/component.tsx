@@ -1,16 +1,17 @@
+import React from "react"
 import AutoComplete from "@/components/autocomplete"
 import axios from 'axios'
 import { PLAN_ENDPOINT, availableCoursesMap } from "@/constants"
 import { Button, Container, Typography } from "@mui/material"
-import React, { useState } from "react"
+import { useCoursesContext } from "./context"
 
 const Plan: React.FC = () => {
-    const [courseArray, setCourseArray] = useState<string[]>([])
+    const { selectedCourses } = useCoursesContext()
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
      
-        const mappedCourseIds = courseArray.map((course) => availableCoursesMap[course])
+        const mappedCourseIds = selectedCourses.map((course) => availableCoursesMap[course])
         const courseQuery = mappedCourseIds.join(',')
 
         try {
@@ -29,12 +30,12 @@ const Plan: React.FC = () => {
         <Container>
             <Typography variant="h5">Select the courses you want to plan:</Typography>
             <form onSubmit={handleSubmit}>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <Button disabled={courseArray.length === 0} type='submit' variant="outlined">Submit</Button>
+                <AutoComplete />
+                <AutoComplete />
+                <AutoComplete />
+                <AutoComplete />
+                <AutoComplete />
+                <Button disabled={selectedCourses.length === 0} type='submit' variant="outlined">Submit</Button>
             </form>
         </Container>
     )

@@ -15,6 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const coursesArray: string[] = courses.split(',').map(str => str.trim());
     
         let coursesData: UwaterlooClass[] = []
+
         await Promise.all(coursesArray.map(async (course: string) => {
             try {
                 const response = await axios.get<UwaterlooClass>(UW_SCHEDULES_ENDPOINT + course, {
@@ -38,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const data = generateSchedules(allCombinationsOfClasses)
-        console.log('data: ', data)
+        
         res.status(200).send(data)
     } else {
         res.status(401).end()

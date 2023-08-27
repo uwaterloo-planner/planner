@@ -1,41 +1,41 @@
+import React from "react"
 import AutoComplete from "@/components/autocomplete"
-import { availableCoursesMap } from "@/constants"
+import axios from 'axios'
+import { PLAN_ENDPOINT, availableCoursesMap } from "@/constants"
 import { Button, Container, Typography } from "@mui/material"
-import React, { useState } from "react"
+import { useCoursesContext } from "./context"
 
 const Plan: React.FC = () => {
-    const [courseArray, setCourseArray] = useState<string[]>([])
+    const { selectedCourses } = useCoursesContext()
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
      
-        const mappedCourseIds = courseArray.map((course) => availableCoursesMap[course])
+        const mappedCourseIds = selectedCourses.map((course) => availableCoursesMap[course])
         const courseQuery = mappedCourseIds.join(',')
 
-        const endpoint = `/api/plan?course=${courseQuery}`
-     
-        const options = {
-            method: 'GET',
-            // param: {
-            //     course: courseQuery
-            // }
+        try {
+            const response = await axios.get(PLAN_ENDPOINT, {
+                params: {
+                    course: courseQuery
+                }
+            })
+            const result = await response.data
+            console.log(result)
+        } catch (e) {
+            console.error(e)
         }
-        console.log(options)
-        const response = await fetch(endpoint, options)
-        
-        const result = await response.json()
-        console.log(result)
     }
     return (
         <Container>
             <Typography variant="h5">Select the courses you want to plan:</Typography>
             <form onSubmit={handleSubmit}>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <AutoComplete courseArray={courseArray} setCourseArray={setCourseArray}/>
-                <Button type='submit' variant="outlined">Submit</Button>
+                <AutoComplete />
+                <AutoComplete />
+                <AutoComplete />
+                <AutoComplete />
+                <AutoComplete />
+                <Button disabled={selectedCourses.length === 0} type='submit' variant="outlined">Submit</Button>
             </form>
         </Container>
     )

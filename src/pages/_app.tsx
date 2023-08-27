@@ -4,9 +4,9 @@ import { SessionProvider, useSession } from "next-auth/react"
 import { loadingStatus } from "@/constants"
 import LoadingState from "@/components/loading"
 import { Container } from "@mui/material"
-import Header from "@/components/header"
 import 'tailwindcss/tailwind.css'
-import Footer from "@/components/footer"
+import BaseLayout from "@/components/baseLayout"
+import { CoursesProvider } from "./plan/context"
 
 export default function App({
     Component,
@@ -14,11 +14,13 @@ export default function App({
 }: AppProps): React.ReactNode {
     return (
         <SessionProvider session={session}>
-            <Auth>
-                <Header />
-                <Component {...pageProps} />
-                <Footer />
-            </Auth>
+            <CoursesProvider>
+                <Auth>
+                    <BaseLayout>
+                    <Component {...pageProps} />
+                    </BaseLayout>
+                </Auth>
+            </CoursesProvider>
         </SessionProvider>
     )
 }

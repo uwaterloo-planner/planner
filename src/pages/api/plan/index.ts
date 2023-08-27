@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (session) {
         const courses = req.query.course as string
         console.log('got request with courses: ', courses)
-        const coursesArray: string[] = courses.split(',').map(str => str.trim());
+        const coursesArray: string[] = courses.split(',').map(str => str.trim())
     
         let coursesData: UwaterlooClass[] = []
 
@@ -39,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const data = generateSchedules(allCombinationsOfClasses)
-        
+
         res.status(200).send(data)
     } else {
         res.status(401).end()

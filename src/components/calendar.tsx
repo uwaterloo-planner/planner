@@ -43,14 +43,14 @@ const generateRecurringEvents = (schedule: FinalClass[]) => {
     })
     console.log(recurringEvents)
     return recurringEvents
-};
+}
 
 const CalendarComponent: React.FC<CalendarProps> = ({ schedule }) => {
   const recurringEvents = generateRecurringEvents(schedule)
 
   return (
     <div>
-      <h2>Event Calendar</h2>
+      <h2>Courses Calendar</h2>
       <Calendar localizer={localizer} events={recurringEvents} />
     </div>
   )

@@ -10,7 +10,7 @@ export interface UwaterlooClassSchedule {
     classMeetingStartTime: string
     classMeetingEndTime: string
     classMeetingDayPatternCode: string // | null (for now)
-    classMeetingWeekPatternCode: string | null
+    classMeetingWeekPatternCode: string  // | null (for now)
     locationName: string | null
 }
 

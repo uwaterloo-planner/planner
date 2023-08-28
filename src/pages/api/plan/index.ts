@@ -11,7 +11,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (session) {
         const courses = req.query.course as string
-        console.log('got request with courses: ', courses)
         const coursesArray: string[] = courses.split(',').map(str => str.trim())
     
         let coursesData: UwaterlooClass[] = []

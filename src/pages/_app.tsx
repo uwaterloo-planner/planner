@@ -7,21 +7,27 @@ import { Container } from "@mui/material"
 import 'tailwindcss/tailwind.css'
 import BaseLayout from "@/components/baseLayout"
 import { CoursesProvider } from "./plan/context"
+import Head from "next/head"
 
 export default function App({
     Component,
     pageProps: { session, ...pageProps },
 }: AppProps): React.ReactNode {
     return (
-        <SessionProvider session={session}>
-            <CoursesProvider>
-                <Auth>
-                    <BaseLayout>
-                    <Component {...pageProps} />
-                    </BaseLayout>
-                </Auth>
-            </CoursesProvider>
-        </SessionProvider>
+        <>
+            <Head>
+                <link rel="icon" href="/icon.png"  />
+            </Head>
+            <SessionProvider session={session}>
+                <CoursesProvider>
+                    <Auth>
+                        <BaseLayout>
+                            <Component {...pageProps} />
+                        </BaseLayout>
+                    </Auth>
+                </CoursesProvider>
+            </SessionProvider>
+        </>
     )
 }
 

@@ -16,4 +16,14 @@ export const availableCoursesMap: { [key: string]: string } = {
     'CS 370': '004400' 
 }
 
+export const courseIdsHashMap: { [key: string]: string } = {
+    '004377': 'CS 240',
+    '004378': 'CS 241',
+    '004382': 'CS 251',
+    '004392': 'CS 341',
+    '016287': 'CS 346',
+    '011416': 'CS 350',
+    '004400': 'CS 370' 
+}
+
 export const availableCourses: string[] = Object.keys(availableCoursesMap)

@@ -170,3 +170,6 @@ next-env.d.ts
 # Windows
 **/Thumbs.db
 **/ehthumbs.db
+
+# Datagrip
+**/.idea/

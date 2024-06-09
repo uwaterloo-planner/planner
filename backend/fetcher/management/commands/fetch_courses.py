@@ -13,12 +13,13 @@ class Command(BaseCommand):
         return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S")
 
     def handle(self, *args, **kwargs):
-        uw_courses_url = settings.UWATERLOO_API_ENDPOINT + "Courses/" + settings.UWATERLOO_TERM_CODE + "/CS"
-        uw_api_key = settings.UWATERLOO_API_KEY
-        headers= {'x-api-key': uw_api_key}
+        uw_api_url = settings.UWATERLOO_API_ENDPOINT
+        uw_term_code = settings.UWATERLOO_TERM_CODE
+        headers= {'x-api-key': settings.UWATERLOO_API_KEY}
 
         # Fetch courses
-        response = requests.get(uw_courses_url, headers=headers)
+        courses_ep = f"{uw_api_url}/Courses/{uw_term_code}/CS"
+        response = requests.get(courses_ep, headers=headers)
 
         if response.status_code != 200:
             self.stderr.write('Failed to fetch courses')
@@ -34,8 +35,8 @@ class Command(BaseCommand):
         # Fetch class data for each course
         for course in courses_data:
             course_id = course.get('courseId')
-            uw_class_url = settings.UWATERLOO_API_ENDPOINT + "ClassSchedules/" + settings.UWATERLOO_TERM_CODE + "/" + course_id
-            classes_response = requests.get(uw_class_url, headers=headers)
+            classes_ep = f"{uw_api_url}/ClassSchedules/{uw_term_code}/{course_id}"
+            classes_response = requests.get(classes_ep, headers=headers)
             if classes_response.status_code != 200:
                 self.stderr.write(f'Failed to fetch class data for course id: {course_id}. Response status code: {classes_response.status_code}')
                 continue

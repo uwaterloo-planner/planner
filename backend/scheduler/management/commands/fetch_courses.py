@@ -4,7 +4,7 @@ import requests
 from datetime import datetime, time
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from scheduler.models import RawCourse, RawClass, RawClassSchedule, CourseClassSchedules
+from scheduler.models import RawCourse, RawClass, RawClassSchedule, CourseClassSchedules, CoursesOverlap
 
 
 class Command(BaseCommand):
@@ -12,6 +12,9 @@ class Command(BaseCommand):
 
     def _convert_to_time(self, date: str) -> time:
         return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S").time()
+    
+    def _convert_to_datetime(self, date: str) -> datetime:
+        return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S")
 
     def handle(self, *args, **kwargs):
         uw_api_url = settings.UWATERLOO_API_ENDPOINT
@@ -33,6 +36,7 @@ class Command(BaseCommand):
         RawClass.delete_data()
         RawClassSchedule.delete_data()
         CourseClassSchedules.delete_data()
+        CoursesOverlap.delete_data()
 
         # Fetch class data for each course
         for course in courses_data:
@@ -74,6 +78,12 @@ class Command(BaseCommand):
             for schedule in schedule_data:
                 print(schedule)
                 schedule_instance, _ = RawClassSchedule.objects.get_or_create(
+                    schedule_start_date = self._convert_to_datetime(
+                        schedule["scheduleStartDate"]
+                    ),
+                    schedule_end_date = self._convert_to_datetime(
+                        schedule["scheduleEndDate"]
+                    ),
                     class_section=schedule["classSection"],
                     class_meeting_start_time=self._convert_to_time(
                         schedule["classMeetingStartTime"]

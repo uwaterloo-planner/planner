@@ -14,6 +14,8 @@ class RawCourse(models.Model):
         cls.objects.all().delete()
 
 class RawClassSchedule(models.Model):
+    schedule_start_date = models.DateField()
+    schedule_end_date = models.DateField()
     class_section = models.IntegerField()
     class_meeting_start_time = models.TimeField()
     class_meeting_end_time = models.TimeField()
@@ -60,3 +62,7 @@ class CoursesOverlap(models.Model):
         indexes = [
             models.Index(fields=['course1_id', 'course2_id', 'course1_classes', 'course2_classes']),
         ]
+    
+    @classmethod
+    def delete_data(cls):
+        cls.objects.all().delete()

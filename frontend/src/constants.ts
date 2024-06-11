@@ -1,10 +1,10 @@
-const TERM_CODE = '1239'
+const TERM_CODE = '1245'
 
 export const loadingStatus = 'loading'
 export const authenticatedStatus = 'authenticated'
 
-export const UW_SCHEDULES_ENDPOINT = `https://openapi.data.uwaterloo.ca/v3/ClassSchedules/${TERM_CODE}/`
-export const PLAN_ENDPOINT = '/api/plan'
+export const UW_SCHEDULES_ENDPOINT = 'http://127.0.0.1:8000'
+export const PLAN_ENDPOINT = '/class-schedule'
 
 export const availableCoursesMap: { [key: string]: string } = {
     'CS 240': '004377',

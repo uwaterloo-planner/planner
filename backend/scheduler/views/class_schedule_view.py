@@ -22,6 +22,12 @@ class ClassScheduleView(APIView):
 
         class_combinations_by_course: Dict[str, CourseClassSchedules] = CourseClassSchedules.objects.in_bulk(course_ids)
 
+        if len(class_combinations_by_course) != len(course_ids):
+            return Response(
+                {"error": "courses parameter should contain valid course IDs."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         class_data_by_course: Dict[str, Dict[int, RawClass]] = {
             id: {
                 class_data.class_section: class_data

@@ -1,9 +1,9 @@
 # compute_class_schedules.py
 
 from django.core.management.base import BaseCommand
-from fetcher.models import RawCourse, RawClass, CourseClassSchedules
-from fetcher.utils import classes_overlap
-from fetcher.serializers import CourseSerializer
+from scheduler.models import RawCourse, RawClass, CourseClassSchedules
+from scheduler.utils import classes_overlap
+from scheduler.serializers import CourseSerializer
 from itertools import groupby, product, combinations
 from typing import List
 

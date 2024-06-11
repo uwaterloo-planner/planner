@@ -4,7 +4,7 @@ import requests
 from datetime import datetime, time
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from fetcher.models import RawCourse, RawClass, RawClassSchedule, CourseClassSchedules
+from scheduler.models import RawCourse, RawClass, RawClassSchedule, CourseClassSchedules
 
 
 class Command(BaseCommand):

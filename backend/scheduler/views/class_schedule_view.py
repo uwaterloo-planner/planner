@@ -20,9 +20,7 @@ class ClassScheduleView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        class_combinations_by_course: Dict[str, CourseClassSchedules] = (
-            CourseClassSchedules.objects.in_bulk(course_ids, field_name="course_id")
-        )
+        class_combinations_by_course: Dict[str, CourseClassSchedules] = CourseClassSchedules.objects.in_bulk(course_ids)
 
         class_data_by_course: Dict[str, Dict[int, RawClass]] = {
             id: {
@@ -32,47 +30,44 @@ class ClassScheduleView(APIView):
             for id in course_ids
         }
 
-        generated_schedules: List[List[Tuple[str, List[int]]]] = (
-            self.generate_valid_class_schedules(
-                class_combinations_by_course, class_data_by_course
-            )
-        )
-        data: List[Dict[str, List[RawClass]]] = [
+        schedules: List[Dict[str, List[RawClass]]] = [
             {
                 course_id: [
                     class_data_by_course[course_id][section_id]
                     for section_id in classes
                 ]
-                for course_id, classes in schedule
+                for course_id, classes in schedule.items()
             }
-            for schedule in generated_schedules
+            for schedule in self.generate_valid_class_schedules(class_combinations_by_course, class_data_by_course)
         ]
 
         return Response(
-            ClassSchedulesSerializer(data, many=True).data, status=status.HTTP_200_OK
+            ClassSchedulesSerializer(schedules, many=True).data, status=status.HTTP_200_OK
         )
 
-        # Generates class schedules for a given courses
-
+        
+    # Generates class schedules for a given courses
     def generate_valid_class_schedules(
         self,
         class_combinations_by_course: Dict[str, CourseClassSchedules],
         class_data_by_course: Dict[str, Dict[int, RawClass]],
-    ) -> List[List[Tuple[str, List[int]]]]:
+    ) -> List[Dict[str, List[int]]]:
 
         course_ids = list(class_combinations_by_course.keys())
 
+        # Uses dynamic programming to generate all possible schedules
+        # 
         # Base case
-        # [[(course_id, [section_id ...] ... ] ... ]
-        dp: List[List[Tuple[str, List[int]]]] = [
-            [(course_ids[0], schedule)]
+        # [{course_id: [section_id ...] ... } ... ]
+        dp: List[Dict[str, List[int]]] = [
+            {course_ids[0]: schedule}
             for schedule in class_combinations_by_course[course_ids[0]].valid_schedules
         ]
 
         for current_course_id in course_ids[1:]:
             dp = [
-                existing_schedule + [(current_course_id, current_course_classes)]
-                for existing_schedule in dp  # schedule: [(course_id, [section_id ... ]) ...]
+                {**existing_schedule, current_course_id: current_course_classes}
+                for existing_schedule in dp  # existing_schedule: {course_id, [section_id ... ] ...}
                 for current_course_classes in class_combinations_by_course[
                     current_course_id
                 ].valid_schedules  # current_course_classes: [section_id ... ]
@@ -82,25 +77,26 @@ class ClassScheduleView(APIView):
                         (current_course_id, current_course_classes),
                         class_data_by_course,
                     )
-                    for existing_schedule_entry in existing_schedule  # existing_schedule_entry: (course_id, [section_id ... ])
+                    for existing_schedule_entry in existing_schedule.items()  # existing_schedule_entry: (course_id, [section_id ... ])
                 )
             ]
-        print(dp)
+
         return dp
 
     def courses_overlap(
         self,
-        existing_schedule: Tuple[int, List[int]],
-        new_class_schedule: Tuple[int, List[int]],
+        course1_schedule: Tuple[int, List[int]],
+        course2_schedule: Tuple[int, List[int]],
         class_data_by_course: Dict[str, Dict[int, RawClass]],
     ) -> bool:
-        course1_id, course1_classes = existing_schedule
-        course2_id, course2_classes = new_class_schedule
+        course1_id, course1_classes = course1_schedule
+        course2_id, course2_classes = course2_schedule
+        
         return any(
             classes_overlap(
-                class_data_by_course[course1_id][section_id_1],
-                class_data_by_course[course2_id][section_id_2],
+                class_data_by_course[course1_id][section1_id],
+                class_data_by_course[course2_id][section2_id],
             )
-            for section_id_1 in course1_classes
-            for section_id_2 in course2_classes
+            for section1_id in course1_classes
+            for section2_id in course2_classes
         )

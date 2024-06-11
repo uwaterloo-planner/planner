@@ -10,4 +10,4 @@ class CourseListView(APIView):
             return Response({'error': 'No query parameters expected'}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer = CourseSerializer(RawCourse.objects, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)

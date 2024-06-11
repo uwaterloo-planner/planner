@@ -17,8 +17,12 @@ class RawClassSchedule(models.Model):
     class_section = models.IntegerField()
     class_meeting_start_time = models.TimeField()
     class_meeting_end_time = models.TimeField()
-    class_meeting_day_pattern_code = models.CharField(max_length=31)  # Can adjust length as needed
-    class_meeting_week_pattern_code = models.CharField(max_length=31)  # Can djust length as needed
+    class_meeting_day_pattern_code = models.CharField(
+        max_length=31
+    )  # Can adjust length as needed
+    class_meeting_week_pattern_code = models.CharField(
+        max_length=31
+    )  # Can djust length as needed
 
     @classmethod
     def delete_data(cls):
@@ -34,8 +38,10 @@ class RawClass(models.Model):
     def delete_data(cls):
         cls.objects.all().delete()
 
-class ValidClassSchedules(models.Model):
-    course_id = models.CharField(max_length=31, null=True)  # Can adjust length as needed
+class CourseClassSchedules(models.Model):
+    course_id = models.CharField(
+        max_length=31, primary_key=True
+    )  # Can adjust length as needed
     valid_schedules = ArrayField(ArrayField(models.IntegerField()))
 
     @classmethod

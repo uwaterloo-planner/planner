@@ -23,6 +23,7 @@ export const modifyFetchedData = (classes: UwaterlooClass[]): PlanClass[] => {
 }
 
 const sectionsOverlap = (section1: UwaterlooSection, section2: UwaterlooSection): boolean => {
+    if (section1.scheduleData === null || section2.scheduleData === null) return false
     for (const scheduleData1 of section1.scheduleData) {
         for (const scheduleData2 of section2.scheduleData) {
             if (

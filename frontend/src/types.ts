@@ -42,7 +42,7 @@ export interface UwaterlooSection {
     // enrollConsentDescription: string | null
     // dropConsentCode: string | null
     // dropConsentDescription: string | null
-    scheduleData: UwaterlooClassSchedule[]  // | null (for now)
+    scheduleData: UwaterlooClassSchedule[]  | null 
     // instructorData: UwaterlooClassInstructor[] | null
 }
 

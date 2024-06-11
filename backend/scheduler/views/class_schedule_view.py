@@ -2,7 +2,7 @@ from typing import Tuple, List, Dict
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import RawClass, CourseClassSchedules
+from ..models import RawClass, CourseClassSchedules, CoursesOverlap
 from ..serializers import ClassSchedulesSerializer
 from ..utils import classes_overlap
 import re
@@ -91,8 +91,29 @@ class ClassScheduleView(APIView):
     ) -> bool:
         course1_id, course1_classes = course1_schedule
         course2_id, course2_classes = course2_schedule
-        
-        return any(
+
+        # Ensure course IDs and class lists are ordered consistently
+        if course1_id > course2_id:
+            course1_id, course2_id = course2_id, course1_id
+            course1_classes, course2_classes = course2_classes, course1_classes
+
+        sorted_course1_classes = sorted(course1_classes)
+        sorted_course2_classes = sorted(course2_classes)
+
+        # Try to get the result from the database
+        try:
+            overlap_result = CoursesOverlap.objects.get(
+                course1_id=course1_id,
+                course2_id=course2_id,
+                course1_classes=sorted_course1_classes,
+                course2_classes=sorted_course2_classes,
+            )
+            return overlap_result.result
+        except CoursesOverlap.DoesNotExist:
+            pass
+
+        # Compute the result if not found in the database
+        result = any(
             classes_overlap(
                 class_data_by_course[course1_id][section1_id],
                 class_data_by_course[course2_id][section2_id],
@@ -100,3 +121,14 @@ class ClassScheduleView(APIView):
             for section1_id in course1_classes
             for section2_id in course2_classes
         )
+
+        # Store the result in the database
+        CoursesOverlap.objects.create(
+            course1_id=course1_id,
+            course2_id=course2_id,
+            course1_classes=sorted_course1_classes,
+            course2_classes=sorted_course2_classes,
+            result=result,
+        )
+
+        return result

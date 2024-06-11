@@ -47,3 +47,16 @@ class CourseClassSchedules(models.Model):
     @classmethod
     def delete_data(cls):
         cls.objects.all().delete()
+
+class CoursesOverlap(models.Model):
+    course1_id = models.IntegerField()
+    course2_id = models.IntegerField()
+    course1_classes = ArrayField(models.IntegerField())
+    course2_classes = ArrayField(models.IntegerField())
+    result = models.BooleanField()
+
+    class Meta:
+        unique_together = ('course1_id', 'course2_id', 'course1_classes', 'course2_classes')
+        indexes = [
+            models.Index(fields=['course1_id', 'course2_id', 'course1_classes', 'course2_classes']),
+        ]

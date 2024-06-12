@@ -9,8 +9,9 @@ interface MenuItemButtonProps {
 
 interface AuthenticationButtonProps {
   variant: "text" | "outlined" | "contained" | undefined
-  href: string
+  href?: string
   text: string
+  onClick: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }
 
 export const MenuItemButton: React.FC<MenuItemButtonProps> = ({ href, text }) => {
@@ -27,7 +28,7 @@ export const MenuItemButton: React.FC<MenuItemButtonProps> = ({ href, text }) =>
   )
 }
 
-export const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({variant, href, text}) => {
+export const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({variant, href, text, onClick}) => {
   return (
     <Button 
       color="primary"
@@ -35,6 +36,7 @@ export const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({varia
       size="small"
       component="a"
       href={href}
+      onClick={onClick}
     >
       {text}
     </Button>

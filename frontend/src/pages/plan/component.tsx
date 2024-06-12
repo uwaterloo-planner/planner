@@ -1,67 +1,113 @@
 import React, { useState } from "react"
-import AutoComplete from "@/components/autocomplete"
+import { GetServerSideProps } from "next"
 import axios from 'axios'
-import { PLAN_ENDPOINT, availableCoursesMap, UW_SCHEDULES_ENDPOINT } from "@/constants"
 import { Button, Container, Typography } from "@mui/material"
-import { useCoursesContext } from "./context"
-import { FinalClass, NewSchedule } from "@/types"
+import AutoComplete from "@/components/autocomplete"
 import CalendarComponent from "@/components/calendar"
+import { chooseCourses, noResults, numberOfCourses, DJANGO_BACKEND_URL, SCHEDULES_EP, COURSE_LIST_EP, find } from "@/constants"
+import { Course, Schedule } from "@/types"
+import { snakeToCamel } from "@/utils"
+import { useCoursesContext } from "./context"
 
-const toCamelCase = (str: string): string => 
-    str.replace(/_([a-z])/g, (_, p1) => p1.toUpperCase());
+interface PlanPageProps {
+    coursesData: Course[] | null
+    error?: string
+}
 
-const convertKeysToCamelCase = (obj: any): any => {
-    if (Array.isArray(obj)) {
-        return obj.map(v => convertKeysToCamelCase(v));
-    } else if (obj !== null && obj.constructor === Object) {
-        return Object.keys(obj).reduce((result, key) => {
-            const camelCaseKey = toCamelCase(key);
-            result[camelCaseKey] = convertKeysToCamelCase(obj[key]);
-            return result;
-        }, {} as any);
+const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
+    if (error || coursesData === null || coursesData == undefined) {
+        return (
+            <Container 
+                className="flex flex-col items-center justify-center min-h-screen"
+            >
+                Error: {error}
+            </Container>
+        )
     }
-    return obj;
-};
 
-const Plan: React.FC = () => {
     const { selectedCourses } = useCoursesContext()
-    const [schedules, setSchedules] = useState<NewSchedule[]>([])
+    const [schedules, setSchedules] = useState<Schedule[]>([])
+    const [ errorMessage, setErrorMessage] = useState('')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-     
-        const mappedCourseIds = selectedCourses.map((course) => availableCoursesMap[course])
-        const courseQuery = mappedCourseIds.join(',')
 
+        const courseQuery = selectedCourses.map(course => course.courseId).join(',')
         try {
-            const response = await axios.get(UW_SCHEDULES_ENDPOINT + PLAN_ENDPOINT, {
+            const response = await axios.get(DJANGO_BACKEND_URL + SCHEDULES_EP, {
                 params: {
                     courses: courseQuery
                 }
             })
             const result = await response.data
+            
+            if (result.length === 0) {
+                handleError(noResults)
+                return
+            }
+
             setSchedules(result)
-        } catch (e) {
+        } catch (e: any) {
             console.error(e)
+            handleError(e.message)
         }
     }
 
+    const handleError = (error: string) => {
+        setErrorMessage(error)
+        setTimeout(() => {
+            setErrorMessage('')
+        }, 5000)
+    }
 
     return (
-        <Container className="py-8">
-            <Typography variant="h5" className="mb=4" >Select the courses you want to plan:</Typography>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <AutoComplete />
-                <AutoComplete />
-                <AutoComplete />
-                <AutoComplete />
-                <AutoComplete />
-                <Button disabled={selectedCourses.length === 0} type='submit' variant="outlined" className="mt-4">Submit</Button>
-            </form>
-            {schedules.length ? <CalendarComponent schedule={convertKeysToCamelCase(schedules[0])}/> : null }
+        <Container className="flex items-center justify-center w-full mt-40 gap-4">
+            <Container className="flex w-1/3 flex-col items-center gap-4">
+                <Typography variant="h5" className="mb-4" >{chooseCourses}</Typography>
+                <form onSubmit={handleSubmit} className="flex flex-col space-y-4 items-center">
+                   {Array
+                        .from({ length: numberOfCourses })
+                        .map((_, index) => (
+                            <AutoComplete key={index} availableCourses={coursesData} />
+                        ))
+                    }
+                    <Button 
+                        disabled={selectedCourses.length === 0} 
+                        type='submit' 
+                        variant="outlined"
+                    >
+                        {find}
+                    </Button>
+                </form>
+                {errorMessage &&
+                    <Typography 
+                        variant="h6" 
+                        className="text-red-500 text-center"
+                    >
+                        {errorMessage}
+                    </Typography>
+                }
+            </Container>
+            {schedules.length > 0 && 
+                <Container >
+                    <CalendarComponent 
+                        schedule={snakeToCamel(schedules)} 
+                        availableCourses={coursesData}/>
+                </Container>
+            }
         </Container>
-
     )
+}
+
+export const getServerSideProps: GetServerSideProps<PlanPageProps> = async () => {
+    try {
+        const response = await axios.get(DJANGO_BACKEND_URL + COURSE_LIST_EP)
+        const result: Course[] = await snakeToCamel(response.data)
+        const sortedResults: Course[] = result.sort((a,b) => a.catalogNumber.localeCompare(b.catalogNumber))
+        return { props: { coursesData: sortedResults}}
+    } catch (e: any) {
+        return { props: { coursesData: null, error: `Failed to load data. ${e.message}` } }
+    }
 }
 
 export default Plan

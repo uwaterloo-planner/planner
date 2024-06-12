@@ -5,20 +5,21 @@ import { Container } from "@mui/material"
 
 const BaseLayout: React.FC<{children: ReactNode }> = ({children}) => {
     return (
-        <>
+    <Container
+        disableGutters
+        maxWidth={false}
+        className="flex flex-col min-h-screen w-full mx-0"
+    >
         <Header />
-        <Container
-            component="main"
-            sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-            }}
+        <Container 
+            disableGutters
+            maxWidth={false} 
+            className="flex-grow"
         >
             {children}
         </Container>
         <Footer />
-    </>
+    </Container>
     )
 }
 

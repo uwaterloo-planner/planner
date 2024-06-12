@@ -1,29 +1,24 @@
-const TERM_CODE = '1245'
-
+// next-auth
 export const loadingStatus = 'loading'
 export const authenticatedStatus = 'authenticated'
 
-export const UW_SCHEDULES_ENDPOINT = 'http://127.0.0.1:8000'
-export const PLAN_ENDPOINT = '/class-schedule'
+// backend service
+export const DJANGO_BACKEND_URL = 'http://127.0.0.1:8000'
+export const SCHEDULES_EP = '/class-schedule'
+export const COURSE_LIST_EP = '/course-list'
 
-export const availableCoursesMap: { [key: string]: string } = {
-    'CS 240': '004377',
-    'CS 241': '004378',
-    'CS 251': '004382',
-    'CS 341': '004392',
-    'CS 346': '016287',
-    'CS 350': '011416',
-    'CS 370': '004400' 
-}
+// Number of courses in autocomplete
+export const numberOfCourses = 5
 
-export const courseIdsHashMap: { [key: string]: string } = {
-    '004377': 'CS 240',
-    '004378': 'CS 241',
-    '004382': 'CS 251',
-    '004392': 'CS 341',
-    '016287': 'CS 346',
-    '011416': 'CS 350',
-    '004400': 'CS 370' 
-}
-
-export const availableCourses: string[] = Object.keys(availableCoursesMap)
+// Strings
+export const plan = "Plan"
+export const profile = "Profile"
+export const uw = "UW"
+export const tagline = "Transform your academic journey with our advanced platform — explore all possible course schedules and effortlessly select the perfect classes for a customized, efficient term planning experience."
+export const signIn = "Sign in"
+export const signUp = "Sign up"
+export const signOutText = "Sign out"
+export const planYourTerm = "Plan your term"
+export const chooseCourses = "Choose the courses you want to plan"
+export const noResults = "Sorry! Could not find any schedules for given courses. Try searching for different courses."
+export const find = "Find"

@@ -1,12 +1,14 @@
-import { FC } from 'react'
+import React from 'react'
+import Link from 'next/link'
 import { alpha, Box, Button, Container, Stack, Typography } from '@mui/material'
+import { uw, plan, tagline, planYourTerm } from '../constants'
 
-const LandingPage: FC = () => {
+const LandingPage: React.FC = () => {
     return (
         <Box
             sx={{
                 backgroundImage: `linear-gradient(#02294F, ${alpha('#090E10', 0.0)})`,
-                backgroundSize: '100% 20%',
+                backgroundSize: '100% 40%',
                 backgroundRepeat: 'no-repeat',
             }}
         >
@@ -16,20 +18,22 @@ const LandingPage: FC = () => {
                         variant="h1"
                         className="flex flex-col md:flex-row self-center text-center text-7xl"
                     >
-                    UW&nbsp;
+                        {uw}&nbsp;
                         <Typography variant='h1' className='text-7xl' sx={{ color: 'primary.light' }}>
-                        Plan
+                            {plan}
                         </Typography>
                     </Typography>
                     <Typography
                         className="text-center self-center w-90"
                         sx={{ color: 'text.secondary' }}
                     >
-                    Transform your academic journey with our advanced platform — explore all possible course schedules and effortlessly select the perfect classes for a customized, efficient term planning experience.
+                        {tagline}
                     </Typography>
-                    <Button variant="contained" color="primary">
-                    Plan your term
-                    </Button>
+                    <Link href="/plan" className="px-1">
+                        <Button variant="contained" color="primary" className="w-full">
+                            {planYourTerm}
+                        </Button>
+                    </Link>
                 </Stack>
             </Container>
         </Box>

@@ -1,31 +1,38 @@
 import React from 'react'
 import dayjs from 'dayjs'
-import { FinalClass, NewSchedule, UwaterlooClassSchedule } from '@/types'
-import { courseIdsHashMap } from '@/constants'
+import { Course, Schedule } from '@/types'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
-import multiMonthPlugin from '@fullcalendar/multimonth'
 import { EventInput } from '@fullcalendar/core/index.js'
-
+import { Container } from '@mui/material'
+import { getCourseName } from '@/utils'
 
 interface CalendarProps {
-    schedule: NewSchedule
+    schedule: Schedule[]
+    availableCourses: Course[]
 }
 
-const generateRecurringEvents = (schedule: NewSchedule) => {
+const generateRecurringEvents = (schedule: Schedule, availableCourses: Course[]) => {
     const recurringEvents: EventInput[] = []
-    console.log(schedule)
 
     for (const [courseId, courseClasses] of Object.entries(schedule)) {
+        const course = availableCourses.find((course) => course.courseId === courseId)
+        if (course === undefined) {
+          continue
+        }
+
+        const courseName = getCourseName(course)
         for (const courseClass of courseClasses) {
-            const title = courseId
-            // const title = `${courseIdsHashMap[inputClass[courseComponent].courseId]} (${courseComponent})`
-            // const scheduleDataArray: UwaterlooClassSchedule[] = inputClass[courseComponent].scheduleData ?? []
-            console.log(courseClass, courseClass.scheduleData)
+            const classTitle = `${courseName}: ${courseClass.courseComponent}`
             courseClass.scheduleData?.forEach(scheduleData =>  {
-                console.log(scheduleData)
-                const { scheduleStartDate, scheduleEndDate, classMeetingWeekPatternCode, classMeetingStartTime, classMeetingEndTime } = scheduleData
+                const { 
+                  scheduleStartDate, 
+                  scheduleEndDate, 
+                  classMeetingWeekPatternCode, 
+                  classMeetingStartTime, 
+                  classMeetingEndTime 
+                } = scheduleData
 
                 const [startTimeHour, startTimeMinute] = classMeetingStartTime.split(':').map(Number)
                 const [endTimeHour, endTimeMinute] = classMeetingEndTime.split(':').map(Number)
@@ -36,7 +43,7 @@ const generateRecurringEvents = (schedule: NewSchedule) => {
                 while ((currentMoment.isBefore(endMoment) || currentMoment.isSame(endMoment)) && classMeetingWeekPatternCode !== null) {
                     if (classMeetingWeekPatternCode[currentMoment.day() === 0 ? 6 : currentMoment.day() - 1] === 'Y') {
                         recurringEvents.push({
-                            title: title,
+                            title: classTitle,
                             start: currentMoment.hour(startTimeHour).minute(startTimeMinute).toDate(),
                             end: currentMoment.hour(endTimeHour).minute(endTimeMinute).toDate(),
                         })
@@ -46,51 +53,31 @@ const generateRecurringEvents = (schedule: NewSchedule) => {
             })
         }
     }
-    console.log(recurringEvents)
     return recurringEvents
 }
 
-const CalendarComponent: React.FC<CalendarProps> = ({ schedule }) => {
-  const recurringEvents = generateRecurringEvents(schedule)
-
-  // a custom render function
-  function renderEventContent(eventInfo) {
-    return (
-      <>
-        <b>{eventInfo.timeText}</b>
-        <i>{eventInfo.event.title}</i>
-      </>
-    )
-  }
+const CalendarComponent: React.FC<CalendarProps> = ({ schedule, availableCourses }) => {
+  const recurringEvents = generateRecurringEvents(schedule[0], availableCourses)
   
   return (
-    <div>
-      <h1>Demo App</h1>
+    <Container className="w-full">
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, multiMonthPlugin]}
-        initialView='multiMonthFourMonth'
+        plugins={[dayGridPlugin, timeGridPlugin]}
+        initialView='timeGridWeek'
         weekends={false}
         events={recurringEvents}
-        eventContent={renderEventContent}
-        views={{
-            multiMonthFourMonth: {
-                type: 'multiMonth',
-                duration: { months: 4 }
-            }
+        headerToolbar={{
+          left: 'prev,next',
+          center: 'title',
+          right: 'timeGridWeek,dayGridMonth'
         }}
         visibleRange={{
             start: '2024-05-01',
             end: '2024-08-31'
-          }}
+        }}
       />
-    </div>
+    </Container>
   )
-//   return (
-//     <div>
-//       <h2>Courses Calendar</h2>
-//       <Calendar localizer={localizer} events={recurringEvents} />
-//     </div>
-//   )
 }
 
 export default CalendarComponent

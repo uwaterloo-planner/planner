@@ -1,3 +1,8 @@
+export interface Course {
+    courseId: string
+    subjectCode: string
+    catalogNumber: string
+}
 export interface UwaterlooClassSchedule {
     classSection: number
     scheduleStartDate: string // $date-time
@@ -15,10 +20,4 @@ export interface UwaterlooSection {
     scheduleData: UwaterlooClassSchedule[] | null
 }
 
-export type UwaterlooClass = UwaterlooSection[]
-
-export type PlanClass = {[courseComponent: string]: UwaterlooSection[]}
-
-export type FinalClass = {[courseComponent: string]: UwaterlooSection}
-
-export type NewSchedule = {[courseId: string]: UwaterlooSection[]}
+export type Schedule = {[courseId: string]: UwaterlooSection[]}

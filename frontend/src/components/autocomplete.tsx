@@ -1,20 +1,22 @@
-import { availableCourses } from '@/constants'
-import { useCoursesContext } from '@/pages/plan/context'
-import { Autocomplete, AutocompleteChangeReason, TextField } from '@mui/material'
 import React, { useState } from 'react'
+import { Autocomplete, AutocompleteChangeReason, TextField } from '@mui/material'
+import { useCoursesContext } from '@/pages/plan/context'
+import { getCourseName } from '@/utils'
+import { Course } from '@/types'
 
-const AutoComplete: React.FC = () => {
-    const [selectedValue, setSelectedValue] = useState<string | null>(null)
+interface AutoCompleteProps {
+    availableCourses: Course[]
+}
+
+const AutoComplete: React.FC<AutoCompleteProps> = ({ availableCourses }) => {
+    const [selectedValue, setSelectedValue] = useState<Course | null>(null)
     const { selectedCourses, setSelectedCourses } = useCoursesContext()
 
-    const handleChange = (e: React.SyntheticEvent, newValue: string | null, reason: AutocompleteChangeReason) => {
-        e.preventDefault()
-
+    const handleChange = (e: React.SyntheticEvent, newValue: Course | null, reason: AutocompleteChangeReason) => {
         if (newValue && reason ==='selectOption') {
             setSelectedCourses(prevSelectedCourses => [...prevSelectedCourses, newValue])
-        }
-        if (reason === 'removeOption' || reason === 'clear' || (selectedValue && availableCourses.includes(selectedValue))) {
-            setSelectedCourses(prevSelectedCourses => prevSelectedCourses.filter(course => course !== selectedValue))
+        } else if (reason === 'removeOption' || reason === 'clear' || (selectedValue && availableCourses.includes(selectedValue))) {
+            setSelectedCourses(prevSelectedCourses => prevSelectedCourses.filter(course => course.courseId !== selectedValue?.catalogNumber))
         }
 
         setSelectedValue(newValue)
@@ -24,10 +26,13 @@ const AutoComplete: React.FC = () => {
         <Autocomplete 
             value={selectedValue}
             onChange={handleChange}
-            options={availableCourses.filter(course => !selectedCourses.includes(course))}
+            options={
+                availableCourses
+                    .filter(course => !selectedCourses.includes(course) || course === selectedValue)
+            }
             isOptionEqualToValue={(option, value) => option.valueOf === value.valueOf}
-            sx = {{ width: 200}}
             renderInput={(params) => <TextField {...params} label="Course" />}
+            getOptionLabel={(course) => getCourseName(course)}
         />
     )
 }

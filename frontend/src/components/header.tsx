@@ -1,13 +1,14 @@
 import React from "react"
-import { Box, AppBar, Toolbar, Container } from '@mui/material'
 import Image from 'next/image'
+import { signOut } from "next-auth/react"
+import { Box, AppBar, Toolbar, Container } from '@mui/material'
 import { MenuItemButton, AuthenticationButton } from "./button"
+import { plan, profile, signIn, signOutText, signUp } from "@/constants"
 
 const Header: React.FC = () => {
     return (
         <AppBar
             className="shadow-none bg-transparent bg-none mt-4"
-            position="fixed"
         >
             <Container maxWidth="lg">
                 <Toolbar
@@ -26,20 +27,20 @@ const Header: React.FC = () => {
                 >
                     <Box className="flex-grow flex items-center">
                         <Image src="/icon.png" alt="logo" width={30} height={30} />
-                        <MenuItemButton href="/plan" text="Plan" />
-                        <MenuItemButton href="/profile" text="Profile" />
+                        <MenuItemButton href="/plan" text={plan} />
+                        <MenuItemButton href="/profile" text={profile} />
                     </Box>
                     <Box className="flex gap-0.5 items-center" >
                         <AuthenticationButton
-                            variant="text"
-                            href="/material-ui/getting-started/templates/sign-in/"
-                            text="Sign in"
+                            variant="contained"
+                            text={signOutText}
+                            onClick={() => signOut()}
                         />
-                        <AuthenticationButton
+                        {/* <AuthenticationButton
                             variant="contained"
                             href="/material-ui/getting-started/templates/sign-up/"
-                            text="Sign up"
-                        />
+                            text={signUp}
+                        /> */}
                     </Box>
                 </Toolbar>
             </Container>

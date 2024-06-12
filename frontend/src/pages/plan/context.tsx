@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState } from 'react'
+import { Course } from '@/types'
 
 interface CoursesContextType {
-    selectedCourses: string[]
-    setSelectedCourses: React.Dispatch<React.SetStateAction<string[]>>
+    selectedCourses: Course[]
+    setSelectedCourses: React.Dispatch<React.SetStateAction<Course[]>>
 }
 
 interface CoursesProviderProps {
@@ -20,7 +21,7 @@ export const useCoursesContext = () => {
 }
 
 export const CoursesProvider: React.FC<CoursesProviderProps> = ({ children }) => {
-  const [selectedCourses, setSelectedCourses] = useState<string[]>([])
+  const [selectedCourses, setSelectedCourses] = useState<Course[]>([])
 
   return (
     <CoursesContext.Provider value={{ selectedCourses, setSelectedCourses}}>

@@ -15,6 +15,10 @@ interface PlanPageProps {
 }
 
 const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
+    const { selectedCourses } = useCoursesContext()
+    const [schedules, setSchedules] = useState<Schedule[]>([])
+    const [ errorMessage, setErrorMessage] = useState('')
+
     if (error || coursesData === null || coursesData == undefined) {
         return (
             <Container 
@@ -24,10 +28,6 @@ const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
             </Container>
         )
     }
-
-    const { selectedCourses } = useCoursesContext()
-    const [schedules, setSchedules] = useState<Schedule[]>([])
-    const [ errorMessage, setErrorMessage] = useState('')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

@@ -63,7 +63,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({ schedule, availableCourses
     <Container className="w-full">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView='timeGridWeek'
+        initialView='dayGridMonth'
         weekends={false}
         events={recurringEvents}
         headerToolbar={{

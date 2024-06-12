@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
-import { Button, Typography } from '@mui/material';
+import React from 'react'
+import Link from 'next/link'
+import { Button, Typography } from '@mui/material'
 
 interface MenuItemButtonProps {
   href: string

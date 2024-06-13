@@ -4,6 +4,7 @@ export const authenticatedStatus = 'authenticated'
 
 // backend service
 export const DJANGO_BACKEND_URL = 'http://127.0.0.1:8000'
+export const NEXTJS_SCHEDULE_API_URL = 'http://localhost:3000/api/class-schedule'
 export const SCHEDULES_EP = '/class-schedule'
 export const COURSE_LIST_EP = '/course-list'
 
@@ -19,6 +20,6 @@ export const signIn = "Sign in"
 export const signUp = "Sign up"
 export const signOutText = "Sign out"
 export const planYourTerm = "Plan your term"
-export const chooseCourses = "Choose the courses you want to plan"
+export const selectCourses = "Select courses to plan"
 export const noResults = "Sorry! Could not find any schedules for given courses. Try searching for different courses."
 export const find = "Find"

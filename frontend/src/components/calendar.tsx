@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Button, Container, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import { Course, Schedule } from '@/types'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { EventInput } from '@fullcalendar/core/index.js'
-import { Container } from '@mui/material'
 import { getCourseName } from '@/utils'
 
-interface CalendarProps {
-    schedule: Schedule[]
+interface CalendarComponentProps {
+    schedules: Schedule[]
+    availableCourses: Course[]
+}
+
+interface SingleCalendarProps {
+    schedule: Schedule
     availableCourses: Course[]
 }
 
@@ -56,28 +61,42 @@ const generateRecurringEvents = (schedule: Schedule, availableCourses: Course[])
     return recurringEvents
 }
 
-const CalendarComponent: React.FC<CalendarProps> = ({ schedule, availableCourses }) => {
-  const recurringEvents = generateRecurringEvents(schedule[0], availableCourses)
+const SingleCalendar: React.FC<SingleCalendarProps> = ({ schedule, availableCourses }) => {
+    const recurringEvents = generateRecurringEvents(schedule, availableCourses)
   
-  return (
+    return (
     <Container className="w-full">
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView='dayGridMonth'
-        weekends={false}
-        events={recurringEvents}
-        headerToolbar={{
-          left: 'prev,next',
-          center: 'title',
-          right: 'timeGridWeek,dayGridMonth'
-        }}
-        visibleRange={{
-            start: '2024-05-01',
-            end: '2024-08-31'
-        }}
-      />
+        <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin]}
+            initialView='dayGridMonth'
+            weekends={false}
+            events={recurringEvents}
+            headerToolbar={{
+                left: 'prev,next',
+                center: 'title',
+                right: 'timeGridWeek,dayGridMonth'
+            }}
+        />
     </Container>
   )
+}
+
+const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedules, availableCourses }) => {
+    const [currentIndex, setCurrentIndex] = useState<number>(0)
+
+    const handleNext = () => setCurrentIndex(prev => (prev < schedules.length - 1 ? prev + 1 : prev))
+    const handlePrev = () => setCurrentIndex(prev => (prev > 0 ? prev - 1 : prev))
+
+    return (
+        <Container className="flex flex-col gap-2" >
+            <Container className="flex items-center justify-between py-4">
+                <Button variant="outlined" disabled={currentIndex === 0} onClick={handlePrev}>Previous Schedule</Button>
+                <Typography variant="h5">Schedule {currentIndex + 1}</Typography>
+                <Button variant="outlined" disabled={currentIndex === schedules.length - 1} onClick={handleNext}>Next Schedule</Button>
+            </Container>
+            <SingleCalendar schedule={schedules[currentIndex]} availableCourses={availableCourses} />
+         </Container>
+    )
 }
 
 export default CalendarComponent

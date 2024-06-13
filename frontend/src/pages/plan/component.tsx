@@ -3,8 +3,8 @@ import { GetServerSideProps } from "next"
 import axios from 'axios'
 import { Button, Container, Typography } from "@mui/material"
 import AutoComplete from "@/components/autocomplete"
-import CalendarComponent from "@/components/calendar"
-import { chooseCourses, noResults, numberOfCourses, DJANGO_BACKEND_URL, SCHEDULES_EP, COURSE_LIST_EP, find } from "@/constants"
+import ScrollableHorizontalView from "@/components/calendar"
+import { find, selectCourses, noResults, numberOfCourses, DJANGO_BACKEND_URL, NEXTJS_SCHEDULE_API_URL, COURSE_LIST_EP } from "@/constants"
 import { Course, Schedule } from "@/types"
 import { snakeToCamel } from "@/utils"
 import { useCoursesContext } from "./context"
@@ -14,7 +14,7 @@ interface PlanPageProps {
     error?: string
 }
 
-const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
+const PlanPage: React.FC<PlanPageProps> = ({ coursesData, error}) => {
     const { selectedCourses } = useCoursesContext()
     const [schedules, setSchedules] = useState<Schedule[]>([])
     const [ errorMessage, setErrorMessage] = useState('')
@@ -34,7 +34,7 @@ const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
 
         const courseQuery = selectedCourses.map(course => course.courseId).join(',')
         try {
-            const response = await axios.get(DJANGO_BACKEND_URL + SCHEDULES_EP, {
+            const response = await axios.get(NEXTJS_SCHEDULE_API_URL, {
                 params: {
                     courses: courseQuery
                 }
@@ -63,7 +63,7 @@ const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
     return (
         <Container className="flex items-center justify-center w-full mt-40 gap-4">
             <Container className="flex w-1/3 flex-col items-center gap-4">
-                <Typography variant="h5" className="mb-4" >{chooseCourses}</Typography>
+                <Typography variant="h5" className="mb-4 text-center" >{selectCourses}</Typography>
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4 items-center">
                    {Array
                         .from({ length: numberOfCourses })
@@ -90,8 +90,8 @@ const Plan: React.FC<PlanPageProps> = ({ coursesData, error}) => {
             </Container>
             {schedules.length > 0 && 
                 <Container >
-                    <CalendarComponent 
-                        schedule={snakeToCamel(schedules)} 
+                    <ScrollableHorizontalView 
+                        schedules={schedules} 
                         availableCourses={coursesData}/>
                 </Container>
             }
@@ -110,4 +110,4 @@ export const getServerSideProps: GetServerSideProps<PlanPageProps> = async () =>
     }
 }
 
-export default Plan
+export default PlanPage

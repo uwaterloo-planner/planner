@@ -1,19 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Course Planner
 
-## Running locally
+Course Planner helps University of Waterloo students plan their courses and visualize their class schedules for the term. It is built with Next.js, Tailwind CSS, Django, and PostgreSQL.
 
-Setup `GOOGLE_ID`, `GOOGLE_SECRET`, `UWATERLOO_KEY` keys before running the server.
+## Features
 
-To run the development server:
+- **Search for Courses:** Easily find courses by name.
+- **Add Courses:** Add selected courses to your personal schedule.
+- **Visualize Schedule:** Get a visual representation of your class schedule.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Running Locally
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Frontend Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Environment Variables:**
+   Create a `.env.local` file in the `frontend` directory with the following keys:
+   ```
+    GOOGLE_ID
+    GOOGLE_SECRET
+    NEXTAUTH_SECRET
+    ```
+2. **Install Dependencies and Run:**
+
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
+3. **Access the Application:**
+
+    Open http://localhost:3000 in your browser.
+
+### Backend Setup
+
+1. **Environment Variables:**
+   Create a `.env` file in the `backend` directory with the following keys:
+   ```
+   UWATERLOO_API_ENDPOINT
+   UWATERLOO_API_KEY
+   UWATERLOO_TERM_CODE
+   ```
+2. **Initial Setup:**
+    
+    For the first run, you need to create a virtual environment, install dependencies, and populate the database with course data.
+    ```bash
+    cd backend
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip3 install -r requirements.txt
+    python3 manage.py fetch_courses
+    python3 manage.py compute_class_schedules
+    ```
+3. **Running the Server:**
+
+    For subsequent runs, simply start the server:
+
+    ```bash
+    source .venv/bin/activate
+    python3 manage.py runserver
+    ```

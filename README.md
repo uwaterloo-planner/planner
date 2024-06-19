@@ -1,4 +1,5 @@
 # Course Planner
+Website: https://course-planner-s22modi.csclub.cloud/
 
 Course Planner helps University of Waterloo students plan their courses and visualize their class schedules for the term. It is built with Next.js, Tailwind CSS, Django, and PostgreSQL.
 ![Screenshot 2024-06-18 at 10 56 44 AM](https://github.com/sparshmodi/planner/assets/96712734/391c472d-0f9f-4daf-bb26-6c596ff0ec9d)

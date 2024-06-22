@@ -7,7 +7,7 @@ import { Container, CssBaseline, ThemeProvider, createTheme, Box } from "@mui/ma
 import { loadingStatus } from "@/constants"
 import LoadingState from "@/components/loading"
 import BaseLayout from "@/components/baseLayout"
-import { CoursesProvider } from "./plan/context"
+import CoursesProvider from "./plan/context"
 import getDarkTheme from "./theme"
 
 const darkTheme = createTheme(getDarkTheme())

@@ -32,11 +32,14 @@ class Command(BaseCommand):
         courses_data = response.json()
 
         # Delete the previous data and store the new data
-        RawCourse.delete_data()
-        RawClass.delete_data()
-        RawClassSchedule.delete_data()
-        CourseClassSchedules.delete_data()
-        CoursesOverlap.delete_data()
+        try:
+            RawCourse.delete_data()
+            RawClass.delete_data()
+            RawClassSchedule.delete_data()
+            CourseClassSchedules.delete_data()
+            CoursesOverlap.delete_data()
+        except:
+            print("ERROR: Could not delete previous relational tables")
 
         # Fetch class data for each course
         for course in courses_data:

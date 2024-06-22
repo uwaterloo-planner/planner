@@ -20,7 +20,7 @@ export const useCoursesContext = () => {
   return context
 }
 
-export const CoursesProvider: React.FC<CoursesProviderProps> = ({ children }) => {
+const CoursesProvider: React.FC<CoursesProviderProps> = ({ children }) => {
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([])
 
   return (
@@ -29,3 +29,5 @@ export const CoursesProvider: React.FC<CoursesProviderProps> = ({ children }) =>
     </CoursesContext.Provider>
   )
 }
+
+export default CoursesProvider

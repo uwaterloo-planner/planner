@@ -35,7 +35,8 @@ const PlanPage: React.FC<PlanPageProps> = ({ coursesData, error}) => {
         const courseQuery = selectedCourses.map(course => course.courseId).join(',')
         try {
             const response = await axios.get(NEXTJS_SCHEDULE_API_URL, {
-                params: {
+                withCredentials: true,
+		        params: {
                     courses: courseQuery
                 }
             })

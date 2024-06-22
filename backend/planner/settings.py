@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'sparshmodi'),
         'USER': os.getenv('POSTGRES_USER', 'sparsh'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'sparsh'),
-        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+        'HOST': os.getenv('POSTGRES_HOST', 'db'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }

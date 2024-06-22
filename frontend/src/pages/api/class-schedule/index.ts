@@ -4,7 +4,7 @@ import { DJANGO_BACKEND_URL, SCHEDULES_EP } from '@/constants'
 import { snakeToCamel } from '@/utils'
 import { getToken } from 'next-auth/jwt'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {	
     const token = await getToken({ req })
 
     if (token) {

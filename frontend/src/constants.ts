@@ -3,8 +3,8 @@ export const loadingStatus = 'loading'
 export const authenticatedStatus = 'authenticated'
 
 // backend service
-export const DJANGO_BACKEND_URL = process.env.DJANGO_BACKEND_URL ?? 'http://localhost:8000'
-export const NEXTJS_SCHEDULE_API_URL = 'https://course-planner-s22modi.csclub.cloud/api/class-schedule'
+export const DJANGO_BACKEND_URL = 'http://backend:8000'
+export const NEXTJS_SCHEDULE_API_URL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/class-schedule`
 export const SCHEDULES_EP = '/class-schedule'
 export const COURSE_LIST_EP = '/course-list'
 

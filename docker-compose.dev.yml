@@ -1,0 +1,49 @@
+name: 'planner-dev'
+
+services:
+  frontend:
+    restart: always
+    build:
+      context: ./frontend
+      target: dev-runner  
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./env/dev/frontend.env
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - planner-network
+  
+  backend:
+    build: ./backend
+    env_file:
+      - ./env/dev/backend.env
+      - ./env/dev/db.env
+    volumes:
+      - ./backend:/app
+    networks:
+      - planner-network
+    depends_on:
+      - planner-db
+      
+  planner-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./env/dev/db.env
+    networks:
+      - planner-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+networks:
+  planner-network:
+    driver: bridge
+
+volumes:
+  pgdata:

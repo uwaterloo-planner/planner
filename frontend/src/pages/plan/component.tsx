@@ -102,7 +102,8 @@ const PlanPage: React.FC<PlanPageProps> = ({ coursesData, error}) => {
 
 export const getServerSideProps: GetServerSideProps<PlanPageProps> = async () => {
     try {
-        const response = await axios.get(DJANGO_BACKEND_URL + COURSE_LIST_EP)
+        const courseListUrl = DJANGO_BACKEND_URL + COURSE_LIST_EP
+        const response = await axios.get(courseListUrl)
         const result: Course[] = await snakeToCamel(response.data)
         const sortedResults: Course[] = result.sort((a,b) => a.catalogNumber.localeCompare(b.catalogNumber))
         return { props: { coursesData: sortedResults}}

@@ -173,3 +173,6 @@ next-env.d.ts
 
 # Datagrip
 **/.idea/
+
+
+logs/

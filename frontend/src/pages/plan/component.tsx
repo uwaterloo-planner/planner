@@ -62,7 +62,7 @@ const PlanPage: React.FC<PlanPageProps> = ({ coursesData, error}) => {
     }
 
     return (
-        <Container className="flex items-center justify-center w-full mt-40 gap-4">
+        <Container className="flex items-center justify-center w-full mt-32 gap-4">
             <Container className="flex w-1/3 flex-col items-center gap-4">
                 <Typography variant="h5" className="mb-4 text-center" >{selectCourses}</Typography>
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4 items-center">

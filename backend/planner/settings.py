@@ -21,9 +21,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Environment variables
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'  # Default to True if DJANGO_DEBUG is not set or is not 'False'
-UWATERLOO_API_ENDPOINT = env('UWATERLOO_API_ENDPOINT')
-UWATERLOO_API_KEY = env('UWATERLOO_API_KEY')
-UWATERLOO_TERM_CODE = env('UWATERLOO_TERM_CODE')
+UWATERLOO_API_ENDPOINT = os.getenv('UWATERLOO_API_ENDPOINT', 'test')
+UWATERLOO_API_KEY = os.getenv('UWATERLOO_API_KEY', 'test')
+UWATERLOO_TERM_CODE = os.getenv('UWATERLOO_TERM_CODE', 'test')
 
 ALLOWED_HOSTS = ["*"]
 

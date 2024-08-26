@@ -39,6 +39,4 @@ EXPOSE 8000
 CMD cron && tail -f /var/log/cron.log & \
 python3 manage.py makemigrations scheduler\
 && python3 manage.py migrate \
-&& python3 manage.py fetch_courses \
-&& python3 manage.py compute_class_schedules \
 && python3 manage.py runserver 0.0.0.0:8000

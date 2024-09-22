@@ -25,3 +25,6 @@ env/
 # Ignore Docker and Compose files
 docker-compose.*.yml
 **/Dockerfile
+
+# Ignore node modules
+frontend/node_modules

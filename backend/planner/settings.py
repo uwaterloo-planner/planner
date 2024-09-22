@@ -11,6 +11,7 @@ def get_env_var(key: str) -> str:
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+UWATERLOO_API_ENDPOINT = "https://openapi.data.uwaterloo.ca/v3"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -19,7 +20,6 @@ SECRET_KEY = get_env_var('SECRET_KEY')
 
 # Environment variables
 DEBUG = get_env_var('DJANGO_DEBUG') == 'True'
-UWATERLOO_API_ENDPOINT = get_env_var('UWATERLOO_API_ENDPOINT')
 UWATERLOO_API_KEY = get_env_var('UWATERLOO_API_KEY')
 UWATERLOO_TERM_CODE = get_env_var('UWATERLOO_TERM_CODE')
 

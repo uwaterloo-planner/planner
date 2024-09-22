@@ -20,6 +20,6 @@ from scheduler.views import CourseListView, ClassScheduleView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('course-list/', CourseListView.as_view(), name='course-list'),
+    path('course-list', CourseListView.as_view(), name='course-list'),
     path('class-schedule', ClassScheduleView.as_view(), name='class-schedule'),
 ]

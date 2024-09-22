@@ -1,6 +1,12 @@
 from pathlib import Path
-import environ
 import os
+
+def get_env_var(key: str) -> str:
+    """Helper function to get environment variables and raise an error if they are not set."""
+    value = os.getenv(key)
+    if not value:
+        raise ValueError(f"The {key} environment variable is not set. Please define it.")
+    return value
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,24 +15,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-t5z@q85cje(wsl-i7zbkcgn5znis477x7@!^2!(^3e9ea9s+&z")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-env = environ.Env(
-    DEBUG = (bool, True)
-)
-
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+SECRET_KEY = get_env_var('SECRET_KEY')
 
 # Environment variables
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'  # Default to True if DJANGO_DEBUG is not set or is not 'False'
-UWATERLOO_API_ENDPOINT = os.getenv('UWATERLOO_API_ENDPOINT', 'test')
-UWATERLOO_API_KEY = os.getenv('UWATERLOO_API_KEY', 'test')
-UWATERLOO_TERM_CODE = os.getenv('UWATERLOO_TERM_CODE', 'test')
+DEBUG = get_env_var('DJANGO_DEBUG') == 'True'
+UWATERLOO_API_ENDPOINT = get_env_var('UWATERLOO_API_ENDPOINT')
+UWATERLOO_API_KEY = get_env_var('UWATERLOO_API_KEY')
+UWATERLOO_TERM_CODE = get_env_var('UWATERLOO_TERM_CODE')
 
 ALLOWED_HOSTS = ["*"]
 
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SESSION_COOKIE_SECURE = get_env_var('DJANGO_DEBUG') == 'False'
+CSRF_COOKIE_SECURE = get_env_var('DJANGO_DEBUG') == 'False'
 
 # Application definition
 
@@ -81,11 +85,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': os.getenv('POSTGRES_DB', 'sparshmodi'),
-        'USER': os.getenv('POSTGRES_USER', 'sparsh'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'sparsh'),
-        'HOST': os.getenv('POSTGRES_HOST', 'db'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        'NAME': get_env_var('POSTGRES_DB'),
+        'USER': get_env_var('POSTGRES_USER'),
+        'PASSWORD': get_env_var('POSTGRES_PASSWORD'),
+        'HOST': get_env_var('POSTGRES_HOST'),
+        'PORT': get_env_var('POSTGRES_PORT'),
     }
 }
 
@@ -111,22 +115,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
+LANGUAGE_CODE = "en-ca"
+TIME_ZONE = "America/New_York"
 USE_I18N = True
-
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

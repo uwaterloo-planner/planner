@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Button, Container, Typography } from "@mui/material"
 import AutoComplete from "@/components/autocomplete"
 import ScrollableHorizontalView from "@/components/calendar"
-import { find, selectCourses, noResults, numberOfCourses, DJANGO_BACKEND_URL, NEXTJS_SCHEDULE_API_URL, COURSE_LIST_EP } from "@/constants"
+import { find, selectCourses, noResults, numberOfCourses, DJANGO_BACKEND_URL, FRONTEND_URL, FRONTEND_SCHEDULE_EP, BACKEND_COURSE_LIST_EP } from "@/constants"
 import { Course, Schedule } from "@/types"
 import { snakeToCamel } from "@/utils"
 import { useCoursesContext } from "./context"
@@ -34,7 +34,7 @@ const PlanPage: React.FC<PlanPageProps> = ({ coursesData, error}) => {
 
         const courseQuery = selectedCourses.map(course => course.courseId).join(',')
         try {
-            const response = await axios.get(NEXTJS_SCHEDULE_API_URL, {
+            const response = await axios.get(FRONTEND_URL + FRONTEND_SCHEDULE_EP, {
                 withCredentials: true,
 		        params: {
                     courses: courseQuery
@@ -102,7 +102,7 @@ const PlanPage: React.FC<PlanPageProps> = ({ coursesData, error}) => {
 
 export const getServerSideProps: GetServerSideProps<PlanPageProps> = async () => {
     try {
-        const courseListUrl = DJANGO_BACKEND_URL + COURSE_LIST_EP
+        const courseListUrl = DJANGO_BACKEND_URL + BACKEND_COURSE_LIST_EP
         const response = await axios.get(courseListUrl)
         const result: Course[] = await snakeToCamel(response.data)
         const sortedResults: Course[] = result.sort((a,b) => a.catalogNumber.localeCompare(b.catalogNumber))

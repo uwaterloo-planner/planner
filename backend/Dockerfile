@@ -35,8 +35,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Run the Django server and cron service
-CMD cron && tail -f /var/log/cron.log & \
-python3 manage.py makemigrations scheduler\
-&& python3 manage.py migrate \
-&& python3 manage.py runserver 0.0.0.0:8000
+# Make sure all shell scripts in /app are executable
+RUN chmod +x /app/*.sh

@@ -17,6 +17,7 @@ services:
   
   backend:
     build: ./backend
+    command: sh /app/entrypoint_prod.sh
     env_file:
       - ./env/prod/backend.env
       - ./env/prod/db.env

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
-import { DJANGO_BACKEND_URL, SCHEDULES_EP } from '@/constants'
+import { BACKEND_SCHEDULE_EP, DJANGO_BACKEND_URL } from '@/constants'
 import { snakeToCamel } from '@/utils'
 import { getToken } from 'next-auth/jwt'
 
@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const courses = req.query.courses
 
         try {
-            const response = await axios.get(DJANGO_BACKEND_URL + SCHEDULES_EP, {
+            const response = await axios.get(DJANGO_BACKEND_URL + BACKEND_SCHEDULE_EP, {
                 params: {
                     courses: courses
                 }

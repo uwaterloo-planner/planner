@@ -105,7 +105,10 @@ export const getServerSideProps: GetServerSideProps<PlanPageProps> = async () =>
         const courseListUrl = DJANGO_BACKEND_URL + BACKEND_COURSE_LIST_EP
         const response = await axios.get(courseListUrl)
         const result: Course[] = await snakeToCamel(response.data)
-        const sortedResults: Course[] = result.sort((a,b) => a.catalogNumber.localeCompare(b.catalogNumber))
+        const sortedResults: Course[] = result.sort((a, b) =>
+            a.subjectCode.localeCompare(b.subjectCode) ||
+            a.catalogNumber.localeCompare(b.catalogNumber)
+        )
         return { props: { coursesData: sortedResults}}
     } catch (e: any) {
         return { props: { coursesData: null, error: `Failed to load data. ${e.message}` } }

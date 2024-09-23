@@ -4,7 +4,6 @@ export const authenticatedStatus = 'authenticated'
 
 // URLs and EPs
 // (FrontEnd)
-export const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL
 export const FRONTEND_SCHEDULE_EP = '/api/class-schedule'
 
 // (BackEnd)

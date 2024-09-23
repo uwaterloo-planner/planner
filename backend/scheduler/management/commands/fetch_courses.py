@@ -19,12 +19,10 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         uw_api_url = settings.UWATERLOO_API_ENDPOINT
         uw_term_code = settings.UWATERLOO_TERM_CODE
-        is_development = settings.DEBUG
         headers = {"x-api-key": settings.UWATERLOO_API_KEY}
 
         # Fetch courses
         courses_ep = f"{uw_api_url}/Courses/{uw_term_code}"
-        courses_ep += "/CS" if is_development else ""
         response = requests.get(courses_ep, headers=headers)
 
         if response.status_code != 200:

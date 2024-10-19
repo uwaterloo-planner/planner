@@ -72,7 +72,7 @@ export const green = {
   900: '#021D02',
 }
 
-const getDesignTokens = (mode: PaletteMode = 'dark') => ({
+const getDesignTokens = (mode: PaletteMode = 'light') => ({
   palette: {
     mode,
     primary: {

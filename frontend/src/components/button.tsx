@@ -18,9 +18,10 @@ export const MenuItemButton: React.FC<MenuItemButtonProps> = ({ href, text }) =>
   return (
     <Link href={href} className="px-1">
       <Button
-        className="py-1.5 px-1 flex items-center text-primary transition duration-300 ease-in-out rounded-3xl"
+        variant='contained'
+        className="px-4 text-primary transition duration-300 ease-in-out rounded-xl"
       >
-        <Typography variant="body2" color="text.primary">
+        <Typography variant="h5" color="text.primary">
           {text}
         </Typography>
       </Button>
@@ -33,7 +34,7 @@ export const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({varia
     <Button 
       color="primary"
       variant={variant}
-      size="small"
+      size="medium"
       component="a"
       href={href}
       onClick={onClick}

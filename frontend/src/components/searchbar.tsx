@@ -1,4 +1,4 @@
-import { Course } from '@/types';
+import { Course } from '@/types'
 import { Autocomplete, FormControl, InputLabel, ListItemText, TextField } from '@mui/material'
 import React, { useState } from 'react'
 
@@ -11,22 +11,22 @@ const getCourseOptionLabel = (course: Course) => {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({courses}) => {
-    const [selectedValue, setSelectedValue] = useState<Course | null>(null);
-    const [inputValue, setInputValue] = useState<string>('');
-    const [filteredOptions, setFilteredOptions] = useState<Course[]>([]);
+    const [selectedValue, setSelectedValue] = useState<Course | null>(null)
+    const [inputValue, setInputValue] = useState<string>('')
+    const [filteredOptions, setFilteredOptions] = useState<Course[]>([])
   
     const handleInputChange = (event: React.SyntheticEvent, newInputValue: string) => {
-        setInputValue(newInputValue);
+        setInputValue(newInputValue)
       
         if (newInputValue) {
             const filtered = courses.filter(course => 
                 getCourseOptionLabel(course).toLowerCase().includes(newInputValue.toLowerCase())
-            );
-            setFilteredOptions(filtered.slice(0, 5)); // Limit to 5 options
+            )
+            setFilteredOptions(filtered.slice(0, 5)) // Limit to 5 options
         } else {
-            setFilteredOptions([]);
+            setFilteredOptions([])
         }
-    };
+    }
 
     const handleChange = (event: React.SyntheticEvent, newSelectedValue: Course | null) => {
         setSelectedValue(newSelectedValue)
@@ -63,7 +63,7 @@ const SearchBar: React.FC<SearchBarProps> = ({courses}) => {
         noOptionsText="No options"
       />
     </FormControl>
-    );
-  };
+    )
+  }
   
-export default SearchBar;
+export default SearchBar

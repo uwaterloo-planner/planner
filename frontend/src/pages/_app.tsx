@@ -19,6 +19,7 @@ export default function App({
     return (
         <>
             <Head>
+                <title>UW Plan</title>
                 <link rel="icon" href="/icon.png"  />
             </Head>
             <SessionProvider session={session}>
@@ -27,7 +28,7 @@ export default function App({
                     <CoursesProvider>
                         <Auth>
                             <BaseLayout>
-                                <Box  sx={{ bgcolor: 'background.default' }}>
+                                <Box sx={{ bgcolor: 'background.default' }}>
                                     <Component {...pageProps} />
                                 </Box>
                             </BaseLayout>
@@ -41,7 +42,7 @@ export default function App({
 
 const Auth: React.FC<PropsWithChildren> = ({ children }) => {
     // status can only be "loading" or "authenticated"
-    const { status } = useSession({ required: true })
+    const { status } = useSession({ required: false })
 
     if (status === loadingStatus) {
         return (

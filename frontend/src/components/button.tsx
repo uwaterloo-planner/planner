@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Button, Typography } from '@mui/material'
+import { Google } from '@mui/icons-material'
 
 interface MenuItemButtonProps {
   href: string
@@ -8,8 +9,7 @@ interface MenuItemButtonProps {
 }
 
 interface AuthenticationButtonProps {
-  variant: "text" | "outlined" | "contained" | undefined
-  href?: string
+  hasIcon?: boolean
   text: string
   onClick: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }
@@ -18,10 +18,10 @@ export const MenuItemButton: React.FC<MenuItemButtonProps> = ({ href, text }) =>
   return (
     <Link href={href} className="px-1">
       <Button
-        variant='contained'
+        variant='text'
         className="px-4 text-primary transition duration-300 ease-in-out rounded-xl"
       >
-        <Typography variant="h5" color="text.primary">
+        <Typography variant='h6'>
           {text}
         </Typography>
       </Button>
@@ -29,17 +29,17 @@ export const MenuItemButton: React.FC<MenuItemButtonProps> = ({ href, text }) =>
   )
 }
 
-export const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({variant, href, text, onClick}) => {
+export const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({ hasIcon = false, text, onClick}) => {
   return (
     <Button 
-      color="primary"
-      variant={variant}
-      size="medium"
+      variant='outlined'
       component="a"
-      href={href}
       onClick={onClick}
+      startIcon={ hasIcon && <Google />} // does not follow google's guidelines, fix later
     >
-      {text}
+      <Typography>
+        {text}
+      </Typography>
     </Button>
   )
 }

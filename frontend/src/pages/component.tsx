@@ -1,14 +1,24 @@
 import React from 'react'
 import Link from 'next/link'
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
-import { uw, plan, tagline, planYourTerm } from '../constants'
+import { uw, plan, tagline, planYourTerm, DJANGO_BACKEND_URL, BACKEND_COURSE_LIST_EP } from '../constants'
+import { GetServerSideProps } from 'next'
+import axios from 'axios'
+import { Course } from '@/types'
+import { snakeToCamel } from '@/utils'
+import SearchBar from '@/components/searchbar'
 
-const LandingPage: React.FC = () => {
+interface LandingPageProps {
+    coursesData: Course[] | null
+    error?: string
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ coursesData, error}) => {
     return (
         <Container 
             disableGutters
             maxWidth={false}
-            className="h-full absolute flex flex-col items-center py-60"
+            className="h-full absolute flex flex-row md:justify-end items-center pb-20"
             sx={{
                 backgroundImage: "url('mountain.webp')",
                 backgroundSize: 'cover',
@@ -16,30 +26,44 @@ const LandingPage: React.FC = () => {
                 backgroundRepeat: 'no-repeat',
             }}
         >
-            <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
-                <Typography
-                    variant="h1"
-                    className="flex flex-col md:flex-row self-center text-center text-7xl"
-                >
-                    {uw}&nbsp;
-                    <Typography variant='h1' className='text-7xl' sx={{ color: 'primary.light' }}>
-                        {plan}
-                    </Typography>
+            <Stack 
+                spacing={1}
+                useFlexGap 
+                className='w-full md:w-5/12 md:pr-48 justify-start'
+            >
+                <Typography variant="h1">
+                    {uw}&nbsp;{plan}
                 </Typography>
                 <Typography
-                    className="text-center self-center w-90"
+                    variant='h6'
                     sx={{ color: 'text.secondary' }}
                 >
                     {tagline}
                 </Typography>
-                <Link href="/plan" className="px-1">
-                    <Button variant="contained" color="primary" className="w-full">
+                {/* <Link href="/plan" className="px-1">
+                    <Button variant="text" color="primary" className="w-full">
                         {planYourTerm}
                     </Button>
-                </Link>
+                </Link> */}
+                <SearchBar courses={coursesData!}/>
             </Stack>
         </Container>
   )
+}
+
+export const getServerSideProps: GetServerSideProps<LandingPageProps> = async () => {
+    try {
+        const courseListUrl = DJANGO_BACKEND_URL + BACKEND_COURSE_LIST_EP
+        const response = await axios.get(courseListUrl)
+        const result: Course[] = await snakeToCamel(response.data)
+        const sortedResults: Course[] = result.sort((a, b) =>
+            a.subjectCode.localeCompare(b.subjectCode) ||
+            a.catalogNumber.localeCompare(b.catalogNumber)
+        )
+        return { props: { coursesData: sortedResults}}
+    } catch (e: any) {
+        return { props: { coursesData: null, error: `Failed to load data. ${e.message}` } }
+    }
 }
 
 export default LandingPage

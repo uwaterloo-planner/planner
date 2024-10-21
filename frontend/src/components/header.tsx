@@ -1,11 +1,12 @@
 import React from "react"
-import Image from 'next/image'
-import { signOut } from "next-auth/react"
-import { Box, AppBar, Toolbar, Container } from '@mui/material'
+import { signIn, signOut, useSession } from "next-auth/react"
+import { AppBar, Toolbar, Container } from '@mui/material'
 import { MenuItemButton, AuthenticationButton } from "./button"
-import { plan, profile, signIn, signOutText, signUp } from "@/constants"
+import { plan, profile, signInText, signOutText } from "@/constants"
 
 const Header: React.FC = () => {
+    const { status } = useSession()
+
     return (
         <AppBar
             className="shadow-none bg-transparent bg-none mt-3"
@@ -21,15 +22,19 @@ const Header: React.FC = () => {
                     "
                 >
                     {/* <Image src="/icon.png" alt="logo" width={30} height={30} /> */}
-                    <MenuItemButton href="/plan" text={plan} />
-                    <MenuItemButton href="/profile" text={profile} />
+                    <MenuItemButton href="/plan" text={plan.toLocaleUpperCase()} />
+                    <MenuItemButton href="/profile" text={profile.toLocaleUpperCase()} />
+                    { status === 'authenticated' ? 
                     <AuthenticationButton
-                        variant="contained"
                         text={signOutText}
                         onClick={() => signOut()}
-                    />
+                    /> : 
+                    <AuthenticationButton
+                        hasIcon
+                        text={signInText.toLocaleUpperCase()}
+                        onClick={() => signIn("google")}
+                    />}
                     {/* <AuthenticationButton
-                        variant="contained"
                         href="/material-ui/getting-started/templates/sign-up/"
                         text={signUp}
                     /> */}
